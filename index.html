@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskDude - Professional Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TaskDude</h1>
+            <div class="actions">
+                <a href="profile.html" class="nav-link">Profile</a>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+                <button id="importBtn">Import Tasks</button>
+                <button id="exportBtn">Export Tasks</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="task-input">
+                <h2>Add New Task</h2>
+                <form id="taskForm">
+                    <input type="text" id="taskTitle" placeholder="Task title" required>
+                    <input type="date" id="taskDate" required>
+                    <select id="taskPriority">
+                        <option value="low">Low Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+                    <input type="file" id="taskIcon" accept="image/png">
+                    <button type="submit">Add Task</button>
+                </form>
+            </section>
+
+            <section class="task-list">
+                <h2>My Tasks</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="dateFilter">Filter by Date:</label>
+                        <select id="dateFilter">
+                            <option value="all">All Dates</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="priorityFilter">Filter by Priority:</label>
+                        <select id="priorityFilter">
+                            <option value="all">All Priorities</option>
+                            <option value="low">Low Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="tasks"></div>
+            </section>
+
+            <section class="statistics">
+                <h2>Task Statistics</h2>
+                <canvas id="taskChart"></canvas>
+            </section>
+
+            <section class="ai-assistant">
+                <h2>Task Assistant</h2>
+                <div class="chat-container">
+                    <div id="chatMessages" class="chat-messages"></div>
+                    <div class="chat-input-container">
+                        <input type="text" id="userInput" placeholder="Ask about your tasks... (e.g., 'What tasks do I have today?')">
+                        <button id="sendMessage">Send</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
