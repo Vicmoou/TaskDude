@@ -649,30 +649,29 @@ button[type="submit"]:hover {
     }
 
     .task-item {
-        padding: 15px;
-        flex-wrap: wrap;
-        gap: 10px;
+        flex-wrap: nowrap;
+        gap: 8px;
     }
 
     .task-content {
-        flex-direction: row;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-right: 10px;
-        width: calc(100% - 54px); /* Account for delete button width + margin */
+        flex: 1 1 auto;
+        min-width: 0;
+        flex-wrap: nowrap;
+        margin-right: 0;
+        gap: 8px;
     }
 
-    .task-checkbox {
-        margin-right: 12px;
+    .task-priority {
+        margin: 0 0 0 8px;
+        order: 2;
+        white-space: nowrap;
     }
 
     .delete-btn {
-        position: relative;
-        top: auto;
-        right: auto;
-        margin: 0;
-        order: 3; /* Place delete button after priority tag */
+        margin-left: 8px;
+        order: 3;
+        position: static;
+        align-self: center;
     }
 
     .task-title {
@@ -688,13 +687,6 @@ button[type="submit"]:hover {
         width: 20px;
         height: 20px;
         margin-right: 8px;
-    }
-
-    .task-priority {
-        margin: 0;
-        padding: 6px 12px;
-        font-size: 0.85rem;
-        order: 2; /* Ensure priority tag stays in line */
     }
 
     .statistics {
