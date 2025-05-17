@@ -650,6 +650,8 @@ button[type="submit"]:hover {
 
     .task-item {
         padding: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .task-content {
@@ -658,6 +660,7 @@ button[type="submit"]:hover {
         gap: 12px;
         flex-wrap: wrap;
         margin-right: 10px;
+        width: calc(100% - 54px); /* Account for delete button width + margin */
     }
 
     .task-checkbox {
@@ -666,12 +669,10 @@ button[type="submit"]:hover {
 
     .delete-btn {
         position: relative;
-        margin-left: auto;
-        width: 44px;
-        height: 44px;
-        font-size: 1.3rem;
         top: auto;
         right: auto;
+        margin: 0;
+        order: 3; /* Place delete button after priority tag */
     }
 
     .task-title {
@@ -693,13 +694,7 @@ button[type="submit"]:hover {
         margin: 0;
         padding: 6px 12px;
         font-size: 0.85rem;
-    }
-
-    .delete-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        margin: 0;
+        order: 2; /* Ensure priority tag stays in line */
     }
 
     .statistics {
