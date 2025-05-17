@@ -31,9 +31,9 @@ header {
 }
 
 header h1 {
-    margin: 0;
-    background: linear-gradient(45deg, #2c3e50, #3498db);
+    margin: 0;    background: linear-gradient(45deg, #2c3e50, #3498db);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 2rem;
 }
@@ -517,4 +517,122 @@ button[type="submit"]:hover {
     margin: 4px 0;
     background: #f8f9fa;
     border-radius: 6px;
-} 
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 15px 10px;
+    }
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #taskForm {
+        grid-template-columns: 1fr;
+    }
+
+    .filters {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .task-item {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        padding: 15px;
+    }
+
+    .task-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .task-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .task-priority {
+        margin-left: 0;
+    }
+
+    .delete-btn {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .statistics {
+        height: auto;
+        padding: 20px 15px;
+    }
+
+    #taskChart {
+        height: 300px !important;
+    }
+
+    .chat-container {
+        height: 500px;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+
+    .chat-input-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .chat-input-container button {
+        width: 100%;
+    }
+}
+
+/* Additional adjustments for very small devices */
+@media screen and (max-width: 480px) {
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .task-title {
+        font-size: 1rem;
+    }
+
+    .actions {
+        gap: 10px;
+    }
+
+    .nav-link,
+    .logout-btn,
+    #importBtn,
+    #exportBtn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .chat-container {
+        height: 400px;
+    }
+}
