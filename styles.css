@@ -76,7 +76,7 @@ header h1 {
     align-items: center;
 }
 
-.nav-link {
+.nav-link, .logout-btn, #importBtn, #exportBtn {
     color: #3498db;
     text-decoration: none;
     padding: 10px 20px;
@@ -84,27 +84,26 @@ header h1 {
     font-weight: 500;
     transition: all 0.3s ease;
     background: rgba(52, 152, 219, 0.1);
+    border: none;
+    cursor: pointer;
 }
 
-.nav-link:hover {
+.nav-link:hover, #importBtn:hover, #exportBtn:hover {
     background: rgba(52, 152, 219, 0.2);
     transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(52, 152, 219, 0.1);
 }
 
 .logout-btn {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
 }
 
 .logout-btn:hover {
-    background: #c0392b;
+    background: rgba(231, 76, 60, 0.2);
+    color: #c0392b;
     transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(231, 76, 60, 0.1);
 }
 
 section {
@@ -202,28 +201,38 @@ button[type="submit"]:hover {
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-right: 20px; /* Increased space before delete button */
 }
 
 .delete-btn {
-    background: none;
-    border: none;
+    margin-left: 20px; /* Increased margin from content */
     color: #e74c3c;
     font-size: 1.5rem;
     cursor: pointer;
-    padding: 5px 10px;
     transition: all 0.3s ease;
     opacity: 0.6;
-    margin-left: auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 44px;
+    height: 44px;
     min-width: 44px;
     min-height: 44px;
+    border-radius: 50%;
+    background: rgba(231, 76, 60, 0.1);
+    border: none;
+    padding: 0;
+    flex-shrink: 0;
+    position: relative; /* Ensure proper positioning */
+    z-index: 1; /* Ensure button stays above other elements */
 }
 
 .delete-btn:hover {
     opacity: 1;
     transform: scale(1.1);
+    background: rgba(231, 76, 60, 0.2);
+    color: #c0392b;
+    box-shadow: 0 3px 6px rgba(231, 76, 60, 0.1);
 }
 
 .task-checkbox {
@@ -291,20 +300,52 @@ button[type="submit"]:hover {
     opacity: 0.7;
 }
 
-#importBtn, #exportBtn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
+.task-priority {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 15px;
+    text-transform: capitalize;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid transparent;
     transition: all 0.3s ease;
-    background: #3498db;
-    color: white;
+    cursor: pointer;
 }
 
-#importBtn:hover, #exportBtn:hover {
-    background: #2980b9;
-    transform: translateY(-2px);
+.task-priority:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.priority-low {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0.2) 100%);
+    color: #27ae60;
+    border-color: rgba(46, 204, 113, 0.2);
+}
+
+.priority-low:hover {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(46, 204, 113, 0.25) 100%);
+}
+
+.priority-medium {
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.1) 0%, rgba(241, 196, 15, 0.2) 100%);
+    color: #f39c12;
+    border-color: rgba(241, 196, 15, 0.2);
+}
+
+.priority-medium:hover {
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(241, 196, 15, 0.25) 100%);
+}
+
+.priority-high {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.2) 100%);
+    color: #c0392b;
+    border-color: rgba(231, 76, 60, 0.2);
+}
+
+.priority-high:hover {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.15) 0%, rgba(231, 76, 60, 0.25) 100%);
 }
 
 .filters {
@@ -503,6 +544,30 @@ button[type="submit"]:hover {
     border-radius: 6px;
 }
 
+.statistics {
+    position: relative;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    backdrop-filter: blur(10px);
+}
+
+#taskChart {
+    width: 100% !important;
+    height: 300px !important;
+    position: relative;
+    transition: none; /* Remove any transitions that might cause dancing */
+}
+
+.task-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     .container {
@@ -588,16 +653,25 @@ button[type="submit"]:hover {
     }
 
     .task-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-right: 10px;
+    }
+
+    .task-checkbox {
+        margin-right: 12px;
     }
 
     .delete-btn {
-        position: static;
+        position: relative;
         margin-left: auto;
-        padding: 8px;
+        width: 44px;
+        height: 44px;
         font-size: 1.3rem;
+        top: auto;
+        right: auto;
     }
 
     .task-title {
@@ -610,15 +684,15 @@ button[type="submit"]:hover {
     }
 
     .task-icon {
-        width: 35px;
-        height: 35px;
-        margin: 0 0 8px 0;
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
     }
 
     .task-priority {
-        font-size: 0.8rem;
-        padding: 4px 10px;
-        margin: 5px 0;
+        margin: 0;
+        padding: 6px 12px;
+        font-size: 0.85rem;
     }
 
     .delete-btn {
@@ -629,6 +703,7 @@ button[type="submit"]:hover {
     }
 
     .statistics {
+        min-height: 350px;
         padding: 15px;
     }
 
