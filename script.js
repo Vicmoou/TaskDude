@@ -322,7 +322,7 @@ function loadTasks() {
 renderTasks();
 updateChart();
 
-// AI Assistant functionality
+// Task Assistant functionality
 const chatMessages = document.getElementById('chatMessages');
 const userInput = document.getElementById('userInput');
 const sendMessageBtn = document.getElementById('sendMessage');
@@ -335,107 +335,78 @@ userInput.addEventListener('keypress', (e) => {
     }
 });
 
-async function handleUserInput() {
-    const query = userInput.value.trim();
-    if (!query) return;
+function handleUserInput() {
+    const input = userInput.value.trim().toLowerCase();
+    if (!input) return;
 
-    // Add user message to chat
-    addUserMessage(query);
+    // Add user message
+    addMessage('user', userInput.value);
     userInput.value = '';
 
-    try {
-        const response = await processUserQuery(query);
-        addAssistantMessage(response);
-    } catch (error) {
-        addAssistantMessage("I'm sorry, I encountered an error. Please try again.");
-        console.error('Error processing query:', error);
-    }
+    // Process the input and generate response
+    const response = generateResponse(input);
+    addMessage('assistant', response);
 }
 
-function addMessage(message, isUser = false) {
-    const messageElement = document.createElement('div');
-    messageElement.className = `message ${isUser ? 'user-message' : 'assistant-message'}`;
-    messageElement.textContent = message;
-    chatMessages.appendChild(messageElement);
+function addMessage(type, content) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}-message`;
+    messageDiv.textContent = content;
+    chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function addAssistantMessage(message) {
-    addMessage(message, false);
-}
-
-function addUserMessage(message) {
-    addMessage(message, true);
-}
-
-async function processUserQuery(query) {
-    try {
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        const taskContext = {
-            totalTasks: tasks.length,
-            todayTasks: tasks.filter(task => task.date === new Date().toISOString().split('T')[0]).length,
-            highPriorityTasks: tasks.filter(task => task.priority === 'high' && !task.completed).length,
-            mediumPriorityTasks: tasks.filter(task => task.priority === 'medium' && !task.completed).length,
-            lowPriorityTasks: tasks.filter(task => task.priority === 'low' && !task.completed).length,
-            completedTasks: tasks.filter(task => task.completed).length
-        };
-
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer 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',
-                'HTTP-Referer': 'http://localhost:5501',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: 'mistralai/mistral-7b-instruct',
-                messages: [
-                    {
-                        role: 'system',
-                        content: `You are a task management assistant. Current task context: ${JSON.stringify(taskContext)}`
-                    },
-                    {
-                        role: 'user',
-                        content: query
-                    }
-                ]
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('API request failed');
+function generateResponse(input) {
+    // Get current date for today's tasks
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Common response patterns
+    if (input.includes('today') || input.includes('do today')) {
+        const todayTasks = tasks.filter(task => task.date === today);
+        if (todayTasks.length === 0) {
+            return "You have no tasks scheduled for today.";
         }
-
-        const data = await response.json();
-        return data.choices[0].message.content;
-    } catch (error) {
-        console.error('Error:', error);
-        return "I'm having trouble processing your request. Please try again.";
+        return "Here are your tasks for today:\n" + 
+            todayTasks.map(task => `• ${task.title} (${task.priority} priority)`).join('\n');
     }
-}
-
-// Update the welcome message to be more dynamic
-window.addEventListener('load', async () => {
-    try {
-        const response = await fetch('http://localhost:3000/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: "Hello!",
-                taskContext: {}
-            })
-        });
-
-        const data = await response.json();
-        if (data.response) {
-            addAssistantMessage(data.response);
-        } else {
-            throw new Error('Invalid welcome message response');
+    
+    if (input.includes('high priority') || input.includes('important')) {
+        const highPriorityTasks = tasks.filter(task => task.priority === 'high');
+        if (highPriorityTasks.length === 0) {
+            return "You don't have any high priority tasks at the moment.";
         }
-    } catch (error) {
-        console.error('Welcome message error:', error);
-        addAssistantMessage("Hey there! 👋 I'm Tasky, your friendly task assistant! I'm excited to help you manage your tasks and make your day more productive. What's on your mind?");
+        return "Here are your high priority tasks:\n" + 
+            highPriorityTasks.map(task => `• ${task.title} (due ${task.date})`).join('\n');
     }
-});
+    
+    if (input.includes('overdue') || input.includes('forgot')) {
+        const overdueTasks = tasks.filter(task => {
+            return !task.completed && new Date(task.date) < new Date(today);
+        });
+        if (overdueTasks.length === 0) {
+            return "You don't have any overdue tasks. Great job staying on track!";
+        }
+        return "Here are your overdue tasks:\n" + 
+            overdueTasks.map(task => `• ${task.title} (due ${task.date})`).join('\n');
+    }
+    
+    if (input.includes('completed') || input.includes('finished')) {
+        const completedTasks = tasks.filter(task => task.completed);
+        if (completedTasks.length === 0) {
+            return "You haven't completed any tasks yet.";
+        }
+        return "Here are your completed tasks:\n" + 
+            completedTasks.map(task => `• ${task.title}`).join('\n');
+    }
+
+    if (input.includes('help') || input.includes('can you')) {
+        return `I can help you manage your tasks! Try asking me things like:
+• What do I need to do today?
+• Show me my high priority tasks
+• Do I have any overdue tasks?
+• What tasks have I completed?`;
+    }
+
+    // Default response
+    return "I'm here to help you manage your tasks! You can ask me about today's tasks, high priority items, overdue tasks, or completed tasks.";
+}

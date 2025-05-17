@@ -1,7 +1,14 @@
+/* Base styles at the top of the file */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+    touch-action: manipulation;
 }
 
 body {
@@ -10,12 +17,37 @@ body {
     background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
     color: #2c3e50;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 30px 20px;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Make all interactive elements have a minimum touch target size */
+button,
+input,
+select,
+.nav-link {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Improve touch targets */
+input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+}
+
+/* Remove default tap highlight on mobile */
+button:focus,
+input:focus,
+select:focus {
+    outline: none;
 }
 
 header {
@@ -404,8 +436,53 @@ button[type="submit"]:hover {
     outline: none;
 }
 
-.ai-assistant {
+.task-assistant {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+}
+
+.helper-container {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.helper-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.helper-btn {
+    padding: 12px 20px;
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
+}
+
+.helper-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.2);
+}
+
+.helper-results {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .chat-container {
@@ -522,7 +599,7 @@ button[type="submit"]:hover {
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     .container {
-        padding: 15px 10px;
+        padding: 10px;
     }
 
     header {
@@ -530,97 +607,16 @@ button[type="submit"]:hover {
         gap: 15px;
         padding: 15px;
         text-align: center;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
     }
 
     .actions {
         flex-wrap: wrap;
         justify-content: center;
-    }
-
-    #taskForm {
-        grid-template-columns: 1fr;
-    }
-
-    .filters {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .filter-group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .task-item {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-        padding: 15px;
-    }
-
-    .task-icon {
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-
-    .task-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .task-priority {
-        margin-left: 0;
-    }
-
-    .delete-btn {
-        margin-left: 0;
-        margin-top: 10px;
-    }
-
-    .statistics {
-        height: auto;
-        padding: 20px 15px;
-    }
-
-    #taskChart {
-        height: 300px !important;
-    }
-
-    .chat-container {
-        height: 500px;
-    }
-
-    .message {
-        max-width: 90%;
-    }
-
-    .chat-input-container {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .chat-input-container button {
-        width: 100%;
-    }
-}
-
-/* Additional adjustments for very small devices */
-@media screen and (max-width: 480px) {
-    header h1 {
-        font-size: 1.75rem;
-    }
-
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    .task-title {
-        font-size: 1rem;
-    }
-
-    .actions {
         gap: 10px;
     }
 
@@ -628,11 +624,180 @@ button[type="submit"]:hover {
     .logout-btn,
     #importBtn,
     #exportBtn {
-        padding: 8px 15px;
+        font-size: 0.9rem;
+        padding: 8px 16px;
+        width: calc(50% - 5px);
+        text-align: center;
+        margin: 0;
+    }
+
+    section {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+    }
+
+    #taskForm {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    input, select, button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        height: 45px;
+    }
+
+    .filters {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-group label {
         font-size: 0.9rem;
     }
 
+    .filter-group select {
+        width: 100%;
+    }
+
+    .task-item {
+        flex-direction: column;
+        padding: 12px;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .task-content {
+        width: 100%;
+    }
+
+    .task-title {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .task-date {
+        font-size: 0.85rem;
+    }
+
+    .task-icon {
+        width: 35px;
+        height: 35px;
+        margin: 0 0 8px 0;
+    }
+
+    .task-priority {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        margin: 5px 0;
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        margin: 0;
+    }
+
+    .statistics {
+        padding: 15px;
+    }
+
+    #taskChart {
+        height: 250px !important;
+        margin-top: 10px;
+    }
+
+    .task-assistant {
+        margin-bottom: 0;
+    }
+
     .chat-container {
-        height: 400px;
+        height: 350px;
+        border-radius: 10px;
+    }
+
+    .chat-messages {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .message {
+        max-width: 85%;
+        padding: 10px 14px;
+        font-size: 0.9rem;
+    }
+
+    .chat-input-container {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .chat-input-container input {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .chat-input-container button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+}
+
+/* Additional adjustments for very small devices */
+@media screen and (max-width: 480px) {
+    header h1 {
+        font-size: 1.6rem;
+    }
+
+    .nav-link,
+    .logout-btn,
+    #importBtn,
+    #exportBtn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .task-title {
+        font-size: 1rem;
+    }
+
+    .chat-container {
+        height: 300px;
+    }
+
+    .message {
+        max-width: 90%;
+        font-size: 0.85rem;
+    }
+
+    .chat-input-container {
+        flex-direction: row;
+    }
+
+    .chat-input-container input {
+        font-size: 0.85rem;
+    }
+
+    .chat-input-container button {
+        padding: 10px 15px;
+        font-size: 0.85rem;
     }
 }
