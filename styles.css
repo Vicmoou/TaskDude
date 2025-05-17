@@ -180,20 +180,16 @@ button[type="submit"]:hover {
 }
 
 .task-item {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #eee;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
-    margin-bottom: 10px;
-    position: relative;
+    background: rgba(255,255,255,0.95);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 18px;
+    padding: 22px 18px;
+    transition: box-shadow 0.2s;
+    border: 1px solid #f0f0f0;
 }
-
-.task-item:hover {
-    background: rgba(255, 255, 255, 0.9);
-    transform: translateX(5px);
+.task-item:last-child {
+    margin-bottom: 0;
 }
 
 .task-content {
@@ -610,49 +606,21 @@ button[type="submit"]:hover {
     }
 
     .task-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        padding: 10px;
+        padding: 18px 10px;
+        margin-bottom: 16px;
     }
     .task-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-        width: 100%;
-        margin-right: 0;
-        min-width: 0;
+        gap: 12px;
     }
-    .task-row-top {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        width: 100%;
+    .task-row-top, .task-row-bottom {
+        gap: 10px;
     }
-    .task-row-bottom {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        width: 100%;
-        margin-top: 2px;
-    }
-    .task-title {
-        font-size: 1rem;
-        font-weight: 500;
-        flex: 1;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .task-date {
-        font-size: 0.9rem;
-        color: #7f8c8d;
-        margin-right: 8px;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    .task-title, .task-date {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        word-break: break-word;
+        max-width: 100%;
     }
     .task-priority, .delete-btn {
         font-size: 0.85rem;
