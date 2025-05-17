@@ -207,11 +207,11 @@ button[type="submit"]:hover {
 }
 
 .task-title, .task-date {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
     min-width: 0;
-    font-size: 1rem;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .task-priority, .delete-btn {
@@ -615,32 +615,34 @@ button[type="submit"]:hover {
     }
 
     .task-content {
-        gap: 6px;
-        margin-right: 6px;
+        gap: 4px;
+        margin-right: 4px;
     }
 
     .task-title, .task-date {
         font-size: 0.95rem;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
+        min-width: 0;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .task-priority, .delete-btn {
-        font-size: 0.95rem;
-        padding: 4px 12px;
-        border-radius: 16px;
+        font-size: 0.85rem;
+        padding: 2px 8px;
+        border-radius: 14px;
     }
 
     .task-checkbox, .task-checkbox label {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
     }
 
     .task-icon {
-        width: 20px;
-        height: 20px;
-        margin-right: 8px;
+        width: 18px;
+        height: 18px;
+        margin-right: 4px;
     }
 
     .statistics {
