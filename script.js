@@ -370,41 +370,47 @@ function addUserMessage(message) {
 
 async function processUserQuery(query) {
     try {
-        // Get current tasks for context
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        const today = new Date().toISOString().split('T')[0];
-        
-        // Prepare task context
         const taskContext = {
             totalTasks: tasks.length,
-            todayTasks: tasks.filter(task => task.date === today).length,
+            todayTasks: tasks.filter(task => task.date === new Date().toISOString().split('T')[0]).length,
             highPriorityTasks: tasks.filter(task => task.priority === 'high' && !task.completed).length,
             mediumPriorityTasks: tasks.filter(task => task.priority === 'medium' && !task.completed).length,
             lowPriorityTasks: tasks.filter(task => task.priority === 'low' && !task.completed).length,
             completedTasks: tasks.filter(task => task.completed).length
         };
 
-        // Send request to server
-        const response = await fetch('http://localhost:3000/api/chat', {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
             headers: {
+                'Authorization': 'Bearer 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',
+                'HTTP-Referer': 'http://localhost:5501',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                query,
-                taskContext
+                model: 'mistralai/mistral-7b-instruct',
+                messages: [
+                    {
+                        role: 'system',
+                        content: `You are a task management assistant. Current task context: ${JSON.stringify(taskContext)}`
+                    },
+                    {
+                        role: 'user',
+                        content: query
+                    }
+                ]
             })
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('API request failed');
         }
 
         const data = await response.json();
-        return data.response;
+        return data.choices[0].message.content;
     } catch (error) {
         console.error('Error:', error);
-        return "I'm having trouble connecting to my AI brain right now. Could you try again in a moment? 🤔";
+        return "I'm having trouble processing your request. Please try again.";
     }
 }
 
@@ -432,4 +438,4 @@ window.addEventListener('load', async () => {
         console.error('Welcome message error:', error);
         addAssistantMessage("Hey there! 👋 I'm Tasky, your friendly task assistant! I'm excited to help you manage your tasks and make your day more productive. What's on your mind?");
     }
-}); 
+});
