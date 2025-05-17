@@ -142,20 +142,20 @@ function renderTasks() {
             ? `<img src="${task.icon}" class="task-icon" alt="Task icon">`
             : '';
         taskElement.innerHTML = `
-            <div class="task-content">
-                <div class="task-row-top">
-                    <div class="task-checkbox">
-                        <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
-                        <label for="task-${task.id}"></label>
-                    </div>
-                    ${iconHTML}
+            <div class="task-left">
+                <div class="task-checkbox">
+                    <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+                    <label for="task-${task.id}"></label>
+                </div>
+                ${iconHTML}
+                <div class="task-main">
                     <div class="task-title">${task.title}</div>
-                </div>
-                <div class="task-row-bottom">
                     <div class="task-date">${new Date(task.date).toLocaleDateString()}</div>
-                    <span class="task-priority priority-${task.priority}">${task.priority}</span>
-                    <button onclick="deleteTask(${task.id})" class="delete-btn">×</button>
                 </div>
+            </div>
+            <div class="task-right">
+                <span class="task-priority priority-${task.priority}">${task.priority}</span>
+                <button onclick="deleteTask(${task.id})" class="delete-btn">×</button>
             </div>
         `;
         tasksContainer.appendChild(taskElement);
@@ -289,20 +289,20 @@ function displayTasks(tasksToDisplay) {
             ? `<img src="${task.icon}" class="task-icon" alt="Task icon">`
             : '';
         taskElement.innerHTML = `
-            <div class="task-content">
-                <div class="task-row-top">
-                    <div class="task-checkbox">
-                        <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
-                        <label for="task-${task.id}"></label>
-                    </div>
-                    ${iconHTML}
+            <div class="task-left">
+                <div class="task-checkbox">
+                    <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+                    <label for="task-${task.id}"></label>
+                </div>
+                ${iconHTML}
+                <div class="task-main">
                     <div class="task-title">${task.title}</div>
-                </div>
-                <div class="task-row-bottom">
                     <div class="task-date">${new Date(task.date).toLocaleDateString()}</div>
-                    <span class="task-priority priority-${task.priority}">${task.priority}</span>
-                    <button onclick="deleteTask(${task.id})" class="delete-btn">×</button>
                 </div>
+            </div>
+            <div class="task-right">
+                <span class="task-priority priority-${task.priority}">${task.priority}</span>
+                <button onclick="deleteTask(${task.id})" class="delete-btn">×</button>
             </div>
         `;
         tasksContainer.appendChild(taskElement);
