@@ -5,10 +5,13 @@ if (!user) {
 }
 
 // Handle logout
-document.getElementById('logoutBtn').addEventListener('click', () => {
-    localStorage.removeItem('user');
-    window.location.href = 'login.html';
-});
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+    });
+}
 
 // Task management
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -20,96 +23,98 @@ const importBtn = document.getElementById('importBtn');
 const exportBtn = document.getElementById('exportBtn');
 const taskChart = document.getElementById('taskChart');
 
-// Initialize Chart
-let chart = new Chart(taskChart, {
-    type: 'doughnut',
-    data: {
-        labels: ['Low Priority', 'Medium Priority', 'High Priority'],
-        datasets: [{
-            data: [0, 0, 0],
-            backgroundColor: [
-                'rgba(46, 204, 113, 0.8)',
-                'rgba(241, 196, 15, 0.8)',
-                'rgba(231, 76, 60, 0.8)'
-            ],
-            borderColor: [
-                'rgba(46, 204, 113, 1)',
-                'rgba(241, 196, 15, 1)',
-                'rgba(231, 76, 60, 1)'
-            ],
-            borderWidth: 2,
-            hoverOffset: 15,
-            hoverBorderWidth: 3
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '65%',
-        animation: {
-            animateScale: true,
-            animateRotate: true,
-            duration: 2000,
-            easing: 'easeOutQuart'
+// Initialize Chart only if on statistics page
+let chart = null;
+if (taskChart) {
+    chart = new Chart(taskChart, {
+        type: 'doughnut',
+        data: {
+            labels: ['Low Priority', 'Medium Priority', 'High Priority'],
+            datasets: [{
+                data: [0, 0, 0],
+                backgroundColor: [
+                    'rgba(46, 204, 113, 0.8)',
+                    'rgba(241, 196, 15, 0.8)',
+                    'rgba(231, 76, 60, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(46, 204, 113, 1)',
+                    'rgba(241, 196, 15, 1)',
+                    'rgba(231, 76, 60, 1)'
+                ],
+                borderWidth: 2,
+                hoverOffset: 15,
+                hoverBorderWidth: 3
+            }]
         },
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    padding: 20,
-                    font: {
-                        size: 13,
-                        family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                        weight: '500'
-                    },
-                    usePointStyle: true,
-                    pointStyle: 'circle'
-                }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 2000,
+                easing: 'easeOutQuart'
             },
-            tooltip: {
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                titleColor: '#2c3e50',
-                bodyColor: '#2c3e50',
-                borderColor: '#e0e0e0',
-                borderWidth: 1,
-                padding: 12,
-                boxPadding: 6,
-                usePointStyle: true,
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.raw || 0;
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                        return `${label}: ${value} (${percentage}%)`;
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 13,
+                            family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                            weight: '500'
+                        },
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#2c3e50',
+                    bodyColor: '#2c3e50',
+                    borderColor: '#e0e0e0',
+                    borderWidth: 1,
+                    padding: 12,
+                    boxPadding: 6,
+                    usePointStyle: true,
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
                     }
                 }
             }
         }
-    }
-});
+    });
+}
 
 // Add Task
-taskForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const title = document.getElementById('taskTitle').value;
-    const date = document.getElementById('taskDate').value;
-    const priority = document.getElementById('taskPriority').value;
-    const iconFile = document.getElementById('taskIcon').files[0];
-    
-    if (iconFile) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            addTask(title, date, priority, e.target.result);
-        };
-        reader.readAsDataURL(iconFile);
-    } else {
-        addTask(title, date, priority);
-    }
-    
-    taskForm.reset();
-});
+if (taskForm) {
+    taskForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('taskTitle').value;
+        const date = document.getElementById('taskDate').value;
+        const priority = document.getElementById('taskPriority').value;
+        const iconFile = document.getElementById('taskIcon').files[0];
+        if (iconFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                addTask(title, date, priority, e.target.result);
+            };
+            reader.readAsDataURL(iconFile);
+        } else {
+            addTask(title, date, priority);
+        }
+        taskForm.reset();
+    });
+}
 
 function addTask(title, date, priority, icon = null) {
     const task = {
@@ -120,7 +125,6 @@ function addTask(title, date, priority, icon = null) {
         icon,
         completed: false
     };
-    
     tasks.push(task);
     saveTasks();
     renderTasks();
@@ -129,16 +133,14 @@ function addTask(title, date, priority, icon = null) {
 
 // Render Tasks
 function renderTasks() {
+    if (!tasksContainer) return;
     tasksContainer.innerHTML = '';
-    
     tasks.forEach(task => {
         const taskElement = document.createElement('div');
         taskElement.className = `task-item ${task.completed ? 'completed' : ''}`;
-        
         const iconHTML = task.icon 
             ? `<img src="${task.icon}" class="task-icon" alt="Task icon">`
             : '';
-            
         taskElement.innerHTML = `
             <div class="task-checkbox">
                 <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
@@ -152,7 +154,6 @@ function renderTasks() {
             <span class="task-priority priority-${task.priority}">${task.priority}</span>
             <button onclick="deleteTask(${task.id})" class="delete-btn">×</button>
         `;
-        
         tasksContainer.appendChild(taskElement);
     });
 }
@@ -184,12 +185,12 @@ function saveTasks() {
 
 // Update Chart
 function updateChart() {
+    if (!chart) return;
     const priorityCounts = {
         low: tasks.filter(task => task.priority === 'low').length,
         medium: tasks.filter(task => task.priority === 'medium').length,
         high: tasks.filter(task => task.priority === 'high').length
     };
-    
     chart.data.datasets[0].data = [
         priorityCounts.low,
         priorityCounts.medium,
@@ -198,66 +199,65 @@ function updateChart() {
     chart.update();
 }
 
-// Export Tasks
-exportBtn.addEventListener('click', () => {
-    const dataStr = JSON.stringify(tasks);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
-    const exportFileDefaultName = 'tasks.json';
-    
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-});
-
-// Import Tasks
-importBtn.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            try {
-                const importedTasks = JSON.parse(e.target.result);
-                tasks = importedTasks;
-                saveTasks();
-                renderTasks();
-                updateChart();
-            } catch (error) {
-                alert('Error importing tasks. Please make sure the file is valid.');
-            }
+// Import/Export Tasks
+if (importBtn) {
+    importBtn.addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedTasks = JSON.parse(e.target.result);
+                    tasks = importedTasks;
+                    saveTasks();
+                    renderTasks();
+                    updateChart();
+                } catch (error) {
+                    alert('Error importing tasks. Please make sure the file is valid.');
+                }
+            };
+            reader.readAsText(file);
         };
-        
-        reader.readAsText(file);
-    };
-    
-    input.click();
-});
+        input.click();
+    });
+}
+if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+        const dataStr = JSON.stringify(tasks, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tasks.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+}
 
-// Add event listeners for filters
-document.getElementById('dateFilter').addEventListener('change', filterTasks);
-document.getElementById('priorityFilter').addEventListener('change', filterTasks);
+// Filters
+const dateFilter = document.getElementById('dateFilter');
+const priorityFilter = document.getElementById('priorityFilter');
+if (dateFilter) dateFilter.addEventListener('change', filterTasks);
+if (priorityFilter) priorityFilter.addEventListener('change', filterTasks);
 
 function filterTasks() {
-    const dateFilter = document.getElementById('dateFilter').value;
-    const priorityFilter = document.getElementById('priorityFilter').value;
+    const dateFilter = document.getElementById('dateFilter');
+    const priorityFilter = document.getElementById('priorityFilter');
+    if (!dateFilter || !priorityFilter) return;
+    const dateValue = dateFilter.value;
+    const priorityValue = priorityFilter.value;
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    
     const filteredTasks = tasks.filter(task => {
         const taskDate = new Date(task.date);
         const today = new Date();
         const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        
-        // Date filtering
         let dateMatch = true;
-        if (dateFilter !== 'all') {
-            switch (dateFilter) {
+        if (dateValue !== 'all') {
+            switch (dateValue) {
                 case 'today':
                     dateMatch = taskDate.toDateString() === new Date().toDateString();
                     break;
@@ -269,29 +269,21 @@ function filterTasks() {
                     break;
             }
         }
-        
-        // Priority filtering
-        const priorityMatch = priorityFilter === 'all' || task.priority === priorityFilter;
-        
+        const priorityMatch = priorityValue === 'all' || task.priority === priorityValue;
         return dateMatch && priorityMatch;
     });
-    
     displayTasks(filteredTasks);
 }
 
-// Update the displayTasks function to accept tasks parameter
 function displayTasks(tasksToDisplay) {
-    const tasksDiv = document.getElementById('tasks');
-    tasksDiv.innerHTML = '';
-    
+    if (!tasksContainer) return;
+    tasksContainer.innerHTML = '';
     tasksToDisplay.forEach((task, index) => {
         const taskElement = document.createElement('div');
         taskElement.className = `task-item ${task.completed ? 'completed' : ''}`;
-        
         const iconHTML = task.icon 
             ? `<img src="${task.icon}" class="task-icon" alt="Task icon">`
             : '';
-            
         taskElement.innerHTML = `
             <div class="task-checkbox">
                 <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
@@ -305,50 +297,47 @@ function displayTasks(tasksToDisplay) {
             <span class="task-priority priority-${task.priority}">${task.priority}</span>
             <button onclick="deleteTask(${task.id})" class="delete-btn">×</button>
         `;
-        
-        tasksDiv.appendChild(taskElement);
+        tasksContainer.appendChild(taskElement);
     });
-    
     updateChart(tasksToDisplay);
 }
 
-// Update the loadTasks function to use the new displayTasks
 function loadTasks() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     displayTasks(tasks);
 }
 
-// Initial render
-renderTasks();
-updateChart();
+// Initial render (only if tasksContainer exists)
+if (tasksContainer) {
+    renderTasks();
+    updateChart();
+}
 
 // Task Assistant functionality
 const chatMessages = document.getElementById('chatMessages');
 const userInput = document.getElementById('userInput');
 const sendMessageBtn = document.getElementById('sendMessage');
-
-// Add event listeners for chat
-sendMessageBtn.addEventListener('click', handleUserInput);
-userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        handleUserInput();
-    }
-});
+if (chatMessages && userInput && sendMessageBtn) {
+    sendMessageBtn.addEventListener('click', handleUserInput);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleUserInput();
+        }
+    });
+}
 
 function handleUserInput() {
+    if (!userInput || !chatMessages) return;
     const input = userInput.value.trim().toLowerCase();
     if (!input) return;
-
-    // Add user message
     addMessage('user', userInput.value);
     userInput.value = '';
-
-    // Process the input and generate response
     const response = generateResponse(input);
     addMessage('assistant', response);
 }
 
 function addMessage(type, content) {
+    if (!chatMessages) return;
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}-message`;
     messageDiv.textContent = content;
@@ -357,10 +346,7 @@ function addMessage(type, content) {
 }
 
 function generateResponse(input) {
-    // Get current date for today's tasks
     const today = new Date().toISOString().split('T')[0];
-    
-    // Common response patterns
     if (input.includes('today') || input.includes('do today')) {
         const todayTasks = tasks.filter(task => task.date === today);
         if (todayTasks.length === 0) {
@@ -369,7 +355,6 @@ function generateResponse(input) {
         return "Here are your tasks for today:\n" + 
             todayTasks.map(task => `• ${task.title} (${task.priority} priority)`).join('\n');
     }
-    
     if (input.includes('high priority') || input.includes('important')) {
         const highPriorityTasks = tasks.filter(task => task.priority === 'high');
         if (highPriorityTasks.length === 0) {
@@ -378,7 +363,6 @@ function generateResponse(input) {
         return "Here are your high priority tasks:\n" + 
             highPriorityTasks.map(task => `• ${task.title} (due ${task.date})`).join('\n');
     }
-    
     if (input.includes('overdue') || input.includes('forgot')) {
         const overdueTasks = tasks.filter(task => {
             return !task.completed && new Date(task.date) < new Date(today);
@@ -389,7 +373,6 @@ function generateResponse(input) {
         return "Here are your overdue tasks:\n" + 
             overdueTasks.map(task => `• ${task.title} (due ${task.date})`).join('\n');
     }
-    
     if (input.includes('completed') || input.includes('finished')) {
         const completedTasks = tasks.filter(task => task.completed);
         if (completedTasks.length === 0) {
@@ -398,7 +381,6 @@ function generateResponse(input) {
         return "Here are your completed tasks:\n" + 
             completedTasks.map(task => `• ${task.title}`).join('\n');
     }
-
     if (input.includes('help') || input.includes('can you')) {
         return `I can help you manage your tasks! Try asking me things like:
 • What do I need to do today?
@@ -406,7 +388,5 @@ function generateResponse(input) {
 • Do I have any overdue tasks?
 • What tasks have I completed?`;
     }
-
-    // Default response
     return "I'm here to help you manage your tasks! You can ask me about today's tasks, high priority items, overdue tasks, or completed tasks.";
 }
